@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryClientProvider from "../provider/queryProvider";
 import { ThemeProvider } from "../provider/themeProvider";
+import { CartProvider } from "../provider/cartProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,9 +36,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryClientProvider>
-            {children}
-          </QueryClientProvider>
+          <CartProvider>
+            <QueryClientProvider>
+              {children}
+            </QueryClientProvider>
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>

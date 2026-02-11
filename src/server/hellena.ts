@@ -2,11 +2,12 @@
 
 import { cacheLife, cacheTag } from "next/cache";
 import { hellena } from "../lib/hellena"
+import { CartItem } from "../context/cartContext";
 
 export async function getProducts() {
     'use cache'
     cacheTag('products')
-    
+
     const products = await hellena.product.findMany();
 
     if (!products) {
@@ -31,4 +32,25 @@ export async function getProductById(productID: string) {
     }
 
     return product;
+}
+
+export async function newOrder({ form, cart }: { form: any, cart: CartItem[] }) {
+    const order = hellena.order.new({
+        info: {
+            customerName: form.customerName,
+            customerEmail: form.customerEmail,
+            address: form.address,
+            lat: Number(form.lat),
+            lng: Number(form.lng),
+        },
+        items: cart.map(item => ({
+            productId: item.id,
+            quantity: item.qtd,
+            price: item.price,
+            image: item.image,
+            name: item.name
+        }))
+    });
+
+    return order;
 }
